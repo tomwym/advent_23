@@ -4,7 +4,6 @@
 
 #include "01"
 
-
 consteval std::string_view trim_newline(const std::string_view sv) {
     if (sv.back() == '\n')
         return std::string_view{ sv.begin(), sv.end() - 1 };
@@ -12,13 +11,12 @@ consteval std::string_view trim_newline(const std::string_view sv) {
         return sv;
 }
 
-consteval int pow(int val, int n) {
+consteval int pow(const int val, const int n) {
     if (n == 0) {
         return 1;
     }
     return val * pow(val, n - 1);
 }
-
 
 consteval int sum(const std::string_view sv, const int order, const int add) {
     if (sv.size() == 0) {
@@ -30,7 +28,7 @@ consteval int sum(const std::string_view sv, const int order, const int add) {
     }
 }
 
-consteval int strview_to_size(const std::string_view sv) {
+consteval int stoi(const std::string_view sv) {
     if (sv.size() == 0 || sv == "\n") {
         return 0;
     }
@@ -41,7 +39,7 @@ consteval int strview_to_size(const std::string_view sv) {
     }
 }
 
-consteval int split_string(const std::string_view sv, const int sum)
+consteval int split_lines(const std::string_view sv, const int sum)
 {
     if (sv.length() == 0) {
         return sum;
@@ -50,17 +48,17 @@ consteval int split_string(const std::string_view sv, const int sum)
         if (c == '\n') {
             ++idx;
             return
-                split_string(
+                split_lines(
                     std::string_view{
                         sv.begin() + idx,
                         sv.end()
                     },
-                    sum + strview_to_size(std::string_view{ sv.begin(), sv.begin() + idx })
+                    sum + stoi(std::string_view{ sv.begin(), sv.begin() + idx })
                 );
         }
         ++idx;
     }
-    return sum + strview_to_size(sv);
+    return sum + stoi(sv);
 }
 
 // return index of elf
@@ -71,7 +69,7 @@ consteval std::tuple<int, int> split_block(const std::string_view sv, const int 
     for (int idx{ 0 }; const auto & c : sv) {
         if (c == '\n' && (idx != (sv.size()-1)) && *(sv.begin() + idx + 1) == '\n') {
             const auto block_score{
-                split_string(
+                split_lines(
                     std::string_view{ sv.begin(), sv.begin() + idx },
                     0
                 )
@@ -90,7 +88,7 @@ consteval std::tuple<int, int> split_block(const std::string_view sv, const int 
         ++idx;
     }
     const auto block_score{
-        split_string(
+        split_lines(
             sv,
             0
         )
